@@ -2,12 +2,27 @@ const express = require("express");
 const pool = require("../config/db");
 const authMiddleware = require("../middleware/authMiddleware");
 
+const { ESLint } = require("eslint");
+const fs = require("fs");
+const path = require("path");
+
 const router = express.Router();
+const eslint = new ESLint();
 
 // Save Code Snippet
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { title, language, code } = req.body;
+    // Create temporary file
+    const tempFile = path.join(__dirname, "tempCode.js");
+
+    fs.writeFileSync(tempFile, code);
+
+    // Run ESLint
+    const results = await eslint.lintFiles([tempFile]);
+
+    // Delete temporary file
+    fs.unlinkSync(tempFile);
 
     const result = await pool.query(
       `INSERT INTO code_snippets (user_id, title, language, code)
@@ -19,6 +34,7 @@ router.post("/", authMiddleware, async (req, res) => {
     res.status(201).json({
       message: "Code snippet saved successfully",
       snippet: result.rows[0],
+      analysis: results,
     });
   } catch (error) {
     console.error(error);
