@@ -84,22 +84,48 @@ export default function SubmitCodePage() {
           Submit Code
         </button>
         {analysis.length > 0 && (
-          <div className="mt-6 border rounded-lg p-4">
-            <h2 className="text-xl font-bold mb-3">Static Code Analysis</h2>
+         <div className="mt-8 border rounded-xl p-6 shadow-lg bg-white">
+  <h2 className="text-2xl font-bold mb-4">
+    📊 Static Code Analysis Report
+  </h2>
 
-           {analysis.length > 0 && analysis[0]?.messages?.length === 0 ? (
-              <p>No issues found ✅</p>
-            ) : (
-              analysis[0]?.messages?.map((item: any, index: number) => (
-                <div key={index} className="mb-2">
-                  <p><strong>Line:</strong> {item.line}</p>
-                  <p><strong>Message:</strong> {item.message}</p>
-                  <p><strong>Rule:</strong> {item.ruleId}</p>
-                  <hr className="my-2" />
-                </div>
-              ))
-            )}
-          </div>
+  <div className="mb-4 p-3 bg-gray-100 rounded-lg">
+    <p className="font-semibold">
+      Total Issues: {analysis[0]?.messages?.length}
+    </p>
+  </div>
+
+  {analysis[0]?.messages?.length === 0 ? (
+    <div className="p-4 border rounded-lg">
+      <p className="text-green-600 font-semibold">
+        ✅ Great! No issues found.
+      </p>
+    </div>
+  ) : (
+    analysis[0]?.messages?.map((item: any, index: number) => (
+      <div
+        key={index}
+        className="border rounded-lg p-4 mb-4 shadow-sm"
+      >
+        <h3 className="font-bold text-lg mb-2">
+          ⚠️ Issue #{index + 1}
+        </h3>
+
+        <p>
+          <strong>📍 Line:</strong> {item.line}
+        </p>
+
+        <p>
+          <strong>📌 Rule:</strong> {item.ruleId}
+        </p>
+
+        <p>
+          <strong>📝 Message:</strong> {item.message}
+        </p>
+      </div>
+    ))
+  )}
+</div>
         )}
 
       </div>
