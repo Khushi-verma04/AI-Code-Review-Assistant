@@ -17,7 +17,20 @@ router.post("/", async (req, res) => {
         {
           role: "system",
           content:
-            "You are an expert code reviewer. Review the code and provide bugs, improvements, best practices, and a short explanation.",
+            `You are an expert code reviewer.
+
+Review the given code and provide:
+
+1. Bugs
+2. Improvements
+3. Best Practices
+4. Time Complexity
+5. Space Complexity
+6. Code Smells (unused variables, duplicate code, long methods, magic numbers, poor naming, deep nesting, etc.)
+7. Refactored Code
+8. Short Explanation
+
+Format your response using clear Markdown headings.`,
         },
         {
           role: "user",
