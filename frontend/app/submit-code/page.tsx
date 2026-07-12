@@ -7,7 +7,8 @@ export default function SubmitCodePage() {
   const [language, setLanguage] = useState("JavaScript");
   const [code, setCode] = useState("");
   const [analysis, setAnalysis] = useState<any[]>([]);
-  
+  const [review, setReview] = useState("");
+
   const handleSubmit = async () => {
     try {
       const token = localStorage.getItem("token");
@@ -30,6 +31,25 @@ export default function SubmitCodePage() {
 
       if (response.ok) {
         setAnalysis(data.analysis);
+
+        const aiResponse = await fetch("http://localhost:5000/api/ai-review", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            code: code,
+          }),
+        });
+
+        const aiData = await aiResponse.json();
+
+        if (aiResponse.ok) {
+          setReview(aiData.review);
+        } else {
+          alert(aiData.message);
+        }
+
         alert("Code snippet saved successfully!");
 
         setTitle("");
@@ -84,50 +104,60 @@ export default function SubmitCodePage() {
           Submit Code
         </button>
         {analysis.length > 0 && (
-         <div className="mt-8 border rounded-xl p-6 shadow-lg bg-white">
-  <h2 className="text-2xl font-bold mb-4">
-    📊 Static Code Analysis Report
-  </h2>
+          <div className="mt-8 border rounded-xl p-6 shadow-lg bg-white">
+            <h2 className="text-2xl font-bold mb-4">
+              📊 Static Code Analysis Report
+            </h2>
 
-  <div className="mb-4 p-3 bg-gray-100 rounded-lg">
-    <p className="font-semibold">
-      Total Issues: {analysis[0]?.messages?.length}
-    </p>
-  </div>
+            <div className="mb-4 p-3 bg-gray-100 rounded-lg">
+              <p className="font-semibold">
+                Total Issues: {analysis[0]?.messages?.length}
+              </p>
+            </div>
 
-  {analysis[0]?.messages?.length === 0 ? (
-    <div className="p-4 border rounded-lg">
-      <p className="text-green-600 font-semibold">
-        ✅ Great! No issues found.
-      </p>
-    </div>
-  ) : (
-    analysis[0]?.messages?.map((item: any, index: number) => (
-      <div
-        key={index}
-        className="border rounded-lg p-4 mb-4 shadow-sm"
-      >
-        <h3 className="font-bold text-lg mb-2">
-          ⚠️ Issue #{index + 1}
-        </h3>
+            {analysis[0]?.messages?.length === 0 ? (
+              <div className="p-4 border rounded-lg">
+                <p className="text-green-600 font-semibold">
+                  ✅ Great! No issues found.
+                </p>
+              </div>
+            ) : (
+              analysis[0]?.messages?.map((item: any, index: number) => (
+                <div
+                  key={index}
+                  className="border rounded-lg p-4 mb-4 shadow-sm"
+                >
+                  <h3 className="font-bold text-lg mb-2">
+                    ⚠️ Issue #{index + 1}
+                  </h3>
 
-        <p>
-          <strong>📍 Line:</strong> {item.line}
-        </p>
+                  <p>
+                    <strong>📍 Line:</strong> {item.line}
+                  </p>
 
-        <p>
-          <strong>📌 Rule:</strong> {item.ruleId}
-        </p>
+                  <p>
+                    <strong>📌 Rule:</strong> {item.ruleId}
+                  </p>
 
-        <p>
-          <strong>📝 Message:</strong> {item.message}
-        </p>
-      </div>
-    ))
-  )}
-</div>
+                  <p>
+                    <strong>📝 Message:</strong> {item.message}
+                  </p>
+                </div>
+              ))
+            )}
+          </div>
         )}
+        {review && (
+          <div className="mt-8 border rounded-xl p-6 shadow-lg bg-white">
+            <h2 className="text-2xl font-bold mb-4">
+              🤖 AI Code Review
+            </h2>
 
+            <pre className="whitespace-pre-wrap">
+              {review}
+            </pre>
+          </div>
+        )}
       </div>
     </div>
   );

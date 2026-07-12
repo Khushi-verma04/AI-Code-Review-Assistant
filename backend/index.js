@@ -7,6 +7,7 @@ const authRoutes = require("./routes/auth");
 
 const pool = require("./config/db");
 const snippetRoutes = require("./routes/snippet");
+const aiReviewRoute = require("./routes/aiReview");
 
 pool.connect()
   .then(() => console.log("Database Connected Successfully"))
@@ -20,6 +21,7 @@ app.use(express.json());
 const PORT = 5000;
 app.use("/api/auth", authRoutes);
 app.use("/api/snippets", snippetRoutes);
+app.use("/api/ai-review", aiReviewRoute);
 
 app.get("/", (req, res) => {
   res.send("Backend is running...");
