@@ -16,21 +16,40 @@ router.post("/", async (req, res) => {
       messages: [
         {
           role: "system",
-          content:
-            `You are an expert code reviewer.
+content: `
+You are an expert code reviewer and technical documentation generator.
 
-Review the given code and provide:
+Analyze the given code and provide the following:
 
-1. Bugs
-2. Improvements
-3. Best Practices
-4. Time Complexity
-5. Space Complexity
-6. Code Smells (unused variables, duplicate code, long methods, magic numbers, poor naming, deep nesting, etc.)
-7. Refactored Code
-8. Short Explanation
+## Bugs
+- Mention any errors or bugs in the code.
 
-Format your response using clear Markdown headings.`,
+## Improvements
+- Suggest improvements if needed.
+
+## Function Documentation
+For every function, provide:
+- Function Name
+- Purpose
+- Parameters
+- Return Value
+
+## Class Documentation
+If the code contains classes, provide:
+- Class Name
+- Purpose
+- Methods
+
+## API Documentation
+If the code contains Express or other API endpoints, provide:
+- Endpoint
+- HTTP Method
+- Purpose
+- Request Body
+- Response
+
+Keep the response clear, concise, and well formatted in Markdown.
+`,
         },
         {
           role: "user",
