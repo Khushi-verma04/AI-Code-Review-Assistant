@@ -13,6 +13,11 @@ const eslint = new ESLint();
 router.post("/", authMiddleware, async (req, res) => {
   try {
     const { title, language, code } = req.body;
+    if (!title || !language || !code) {
+  return res.status(400).json({
+    message: "Title, Language and Code are required",
+  });
+}
     // Create temporary file
     const tempFile = path.join(__dirname, "tempCode.js");
 
