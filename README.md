@@ -29,3 +29,13 @@ npm run dev
 Backend
 npm install
 node index.js
+
+## Deployment
+
+Frontend deployed on: (your Vercel link)
+
+Backend deployed on: (your backend link)
+
+## Project Status
+
+The application has been successfully deployed and is ready for demonstration.
