@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Editor from "@monaco-editor/react";
 
 export default function SubmitCodePage() {
   const [title, setTitle] = useState("");
@@ -88,15 +89,24 @@ export default function SubmitCodePage() {
           <option>Java</option>
           <option>C++</option>
         </select>
-
-        <textarea
-          rows={12}
-          placeholder="Paste your code here..."
+        <Editor
+          height="400px"
+          language={
+            language === "C++"
+              ? "cpp"
+              : language.toLowerCase()
+          }
           value={code}
-          onChange={(e) => setCode(e.target.value)}
-          className="w-full border p-3 rounded-lg"
+          onChange={(value) => setCode(value || "")}
+          theme="vs-dark"
+          options={{
+            fontSize: 15,
+            minimap: {
+              enabled: false,
+            },
+            automaticLayout: true,
+          }}
         />
-
         <button
           onClick={handleSubmit}
           className="bg-blue-600 text-white px-6 py-3 rounded-lg"
